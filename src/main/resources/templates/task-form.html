@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>New Task</title>
+</head>
+<body>
+<h1>Create Task</h1>
+<form th:action="@{/tasks}" th:object="${task}" method="post">
+    <label>Title:</label>
+    <input type="text" th:field="*{title}"/>
+    <label>Category:</label>
+    <input type="text" th:field="*{category}"/>
+    <label>Due Date:</label>
+    <input type="date" th:field="*{dueDate}"/>
+    <label>Completed:</label>
+    <input type="checkbox" th:field="*{completed}"/>
+    <button type="submit">Save</button>
+</form>
+</body>
+</html>
