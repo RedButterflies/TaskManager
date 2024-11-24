@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Task List</title>
+</head>
+<body>
+<h1>Task List</h1>
+<a href="/tasks/new">Add New Task</a>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Category</th>
+        <th>Due Date</th>
+        <th>Completed</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="task : ${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.category}"></td>
+        <td th:text="${task.dueDate}"></td>
+        <td th:text="${task.completed ? 'Yes' : 'No'}"></td>
+        <td>
+            <a th:href="@{'/tasks/delete/' + ${task.id}}">Delete</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
