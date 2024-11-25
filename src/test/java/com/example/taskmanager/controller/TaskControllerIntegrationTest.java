@@ -74,15 +74,12 @@ class TaskControllerIntegrationTest {
 
     @Test
     void postTask_ValidationFailure() throws Exception {
-        String invalidTaskJson = """
-            {
-                "category": "Invalid Task"
-            }
-            """;
-
         mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidTaskJson))
-                .andExpect(status().isBadRequest());
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("title", "")
+                        .param("category", "")
+                        .param("dueDate", ""))
+                .andExpect(status().isBadRequest()); 
     }
+
 }

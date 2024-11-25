@@ -1,6 +1,12 @@
 package com.example.taskmanager.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.time.LocalDate;
 
 @Entity
@@ -9,9 +15,15 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is required")
     private String title;
+
+    @NotBlank(message = "Category is required")
     private String category;
+
+    @NotNull(message = "Due date is required")
     private LocalDate dueDate;
+
     private boolean completed;
 
    

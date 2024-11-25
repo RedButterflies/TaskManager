@@ -9,10 +9,13 @@
 <form th:action="@{/tasks}" th:object="${task}" method="post">
     <label>Title:</label>
     <input type="text" th:field="*{title}"/>
+    <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</div>
     <label>Category:</label>
     <input type="text" th:field="*{category}"/>
+    <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}">Category Error</div>
     <label>Due Date:</label>
     <input type="date" th:field="*{dueDate}"/>
+    <div th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}">Due Date Error</div>
     <label>Completed:</label>
     <input type="checkbox" th:field="*{completed}"/>
     <button type="submit">Save</button>
