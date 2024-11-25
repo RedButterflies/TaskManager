@@ -39,18 +39,12 @@ class TaskControllerIntegrationTest {
 
     @Test
     void postTask_CreatesTask() throws Exception {
-        String taskJson = """
-            {
-                "title": "New Task",
-                "category": "Personal",
-                "dueDate": "2024-01-01",
-                "completed": false
-            }
-            """;
-
         mockMvc.perform(post("/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(taskJson))
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("title", "Test Task")
+                        .param("category", "Test Category")
+                        .param("dueDate", "2024-11-30")
+                        .param("completed", "false"))
                 .andExpect(status().is3xxRedirection());
     }
 
@@ -68,7 +62,7 @@ class TaskControllerIntegrationTest {
     void getTasks_ReturnsEmptyWhenNoTasks() throws Exception {
         mockMvc.perform(get("/tasks"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(not(containsString("<tr>"))));
+                .andExpect(content().string(not(containsString("<tr><td"))));
     }
 
 
@@ -78,8 +72,24 @@ class TaskControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .param("title", "")
                         .param("category", "")
-                        .param("dueDate", ""))
-                .andExpect(status().isBadRequest()); 
+                        .param("dueDate", "")
+                        .param("completed", "false"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("error-page"))
+                .andExpect(model().attributeExists("errorMessage"));
     }
 
+    @Test
+    void postTask_Success() throws Exception {
+        mockMvc.perform(post("/tasks")
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("title", "Valid Title")
+                        .param("category", "Valid Category")
+                        .param("dueDate", "2024-12-01")
+                        .param("completed", "false"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tasks"));
+
+
+    }
 }

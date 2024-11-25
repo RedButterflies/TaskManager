@@ -6,10 +6,12 @@ import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/tasks")
+@Validated
 public class TaskController {
     private final TaskService taskService;
 
@@ -29,11 +31,15 @@ public class TaskController {
         return "task-form";
     }
 
-    @PostMapping
-    public String saveTask(@Valid @ModelAttribute Task task, BindingResult result) {
-        if (result.hasErrors()) {
+    @PostMapping(consumes = "application/x-www-form-urlencoded")
+    public String saveTask(@Valid @ModelAttribute("task") Task task, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+
+            bindingResult.getAllErrors().forEach(error -> System.out.println(error.getDefaultMessage()));
+            model.addAttribute("task", task);
             return "task-form";
         }
+
         taskService.saveTask(task);
         return "redirect:/tasks";
     }
@@ -44,4 +50,6 @@ public class TaskController {
         taskService.deleteTask(id);
         return "redirect:/tasks";
     }
+
+
 }

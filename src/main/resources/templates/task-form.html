@@ -1,23 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New Task</title>
+    <title>Create Task</title>
 </head>
 <body>
 <h1>Create Task</h1>
 <form th:action="@{/tasks}" th:object="${task}" method="post">
-    <label>Title:</label>
-    <input type="text" th:field="*{title}"/>
-    <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</div>
-    <label>Category:</label>
-    <input type="text" th:field="*{category}"/>
-    <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}">Category Error</div>
-    <label>Due Date:</label>
-    <input type="date" th:field="*{dueDate}"/>
-    <div th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}">Due Date Error</div>
-    <label>Completed:</label>
-    <input type="checkbox" th:field="*{completed}"/>
+    <div>
+        <label>Title:</label>
+        <input type="text" th:field="*{title}" />
+        <p th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+    </div>
+    <div>
+        <label>Category:</label>
+        <input type="text" th:field="*{category}" />
+        <p th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></p>
+    </div>
+    <div>
+        <label>Due Date:</label>
+        <input type="date" th:field="*{dueDate}" />
+        <p th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></p>
+    </div>
+    <div>
+        <label>Completed:</label>
+        <input type="checkbox" th:field="*{completed}" />
+    </div>
     <button type="submit">Save</button>
 </form>
 </body>

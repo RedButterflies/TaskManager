@@ -15,7 +15,7 @@ class FunctionalTest {
 
     @BeforeEach
     void setUp() {
-        System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+        System.setProperty("webdriver.chrome.driver","C:\\Users\\szyns\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe" );
         driver = new ChromeDriver();
         driver.get("http://localhost:8080/tasks");
     }
