@@ -31,12 +31,15 @@ class TaskControllerIntegrationTest {
     void getTasks_ReturnsTasks() throws Exception {
         Task task = new Task();
         task.setTitle("Sample Task");
+        task.setCategory("Work");
+        task.setDueDate(LocalDate.now().plusDays(1));
         taskRepository.save(task);
-
         mockMvc.perform(get("/tasks"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("Sample Task")));
+                .andExpect(content().string(containsString("Sample Task")));
     }
+
+
 
     @Test
     void postTask_CreatesTask() throws Exception {
