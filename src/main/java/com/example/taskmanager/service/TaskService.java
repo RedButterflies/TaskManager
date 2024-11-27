@@ -19,8 +19,12 @@ public class TaskService {
     }
 
     public Task saveTask(Task task) {
+        if (task == null) {
+            throw new IllegalArgumentException("Task cannot be null");
+        }
         return taskRepository.save(task);
     }
+
 
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
