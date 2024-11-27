@@ -2,28 +2,125 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #3e1c94;
+            margin-bottom: 20px;
+        }
+
+        .add-task-btn {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .add-task-btn:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #be9af5;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .action-links a {
+            color: #f44336;
+            text-decoration: none;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .action-links a:hover {
+            text-decoration: underline;
+        }
+
+        .completed-yes {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .completed-no {
+            color: #ffd21c;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-<h1>Task List</h1>
-<a href="/tasks/new">Add New Task</a>
-<table>
-    <tr>
-        <th>Title</th>
-        <th>Category</th>
-        <th>Due Date</th>
-        <th>Completed</th>
-        <th>Actions</th>
-    </tr>
-    <tr th:each="task : ${tasks}">
-        <td th:text="${task.title}"></td>
-        <td th:text="${task.category}"></td>
-        <td th:text="${task.dueDate}"></td>
-        <td th:text="${task.completed ? 'Yes' : 'No'}"></td>
-        <td>
-            <a th:href="@{'/tasks/delete/' + ${task.id}}">Delete</a>
-        </td>
-    </tr>
-</table>
+<div class="container">
+    <h1>Task List</h1>
+    <a href="/tasks/new" class="add-task-btn">Add New Task</a>
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Due Date</th>
+            <th>Completed</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="task : ${tasks}">
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.category}"></td>
+            <td th:text="${task.dueDate}"></td>
+            <td>
+                <span th:class="${task.completed} ? 'completed-yes' : 'completed-no'"
+                      th:text="${task.completed ? 'Yes' : 'No'}"></span>
+            </td>
+            <td class="action-links">
+                <a th:href="@{'/tasks/delete/' + ${task.id}}">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
