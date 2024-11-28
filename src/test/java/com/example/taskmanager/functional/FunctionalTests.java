@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class FunctionalTest {
+class FunctionalTests {
 
     @Autowired
     private MockMvc mockMvc;//Sluzy do symulacji żądań HTTP w testach

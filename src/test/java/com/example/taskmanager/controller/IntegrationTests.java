@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class TaskControllerIntegrationTest {
+class IntegrationTests {
 
     @Autowired
     private MockMvc mockMvc;//Sluzy do symulacji żądan HTTP w testach
