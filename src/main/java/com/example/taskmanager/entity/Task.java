@@ -11,22 +11,27 @@ import java.time.LocalDate;
 
 @Entity
 public class Task {
+    // Pole kluczowe z automatycznym generowaniem unikalnego identyfikatora
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //Tytul zadania -wymagane pole, walidowane
     @NotBlank(message = "Title is required")
     private String title;
 
+    // Kategoria zadania- wymagane pole, walidowane
     @NotBlank(message = "Category is required")
     private String category;
 
+    // Termin zadania -wymagane pole, walidowane
     @NotNull(message = "Due date is required")
     private LocalDate dueDate;
 
+    // Status ukonczenia zadania(domyslnie false)
     private boolean completed;
 
-   
+    //Gettery i settery do dostępu i modyfikacji pól
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
