@@ -27,21 +27,45 @@
             color: #3e1c94;
             margin-bottom: 20px;
         }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-        .add-task-btn {
+        }
+
+
+        .action-btn {
             display: inline-block;
             margin-bottom: 20px;
+            margin-right: 20px;
             padding: 10px 15px;
-            background-color: #4CAF50;
-            color: #fff;
             text-decoration: none;
             border-radius: 4px;
             font-size: 14px;
             font-weight: bold;
+            color: #fff;
         }
 
-        .add-task-btn:hover {
-            background-color: #45a049;
+        .btn-new-task {
+            background-color: #4CAF50;
+        }
+
+        .btn-show-all {
+            background-color: #a062a8;
+        }
+
+        .btn-show-completed {
+            background-color: #0d69b5;
+        }
+
+        .btn-show-pending {
+            background-color: #d19d02;
+            color: #fffcff
+        }
+
+        .action-btn:hover {
+            opacity: 0.9;
         }
 
         table {
@@ -71,23 +95,41 @@
         }
 
         .action-links a {
-            color: #f44336;
             text-decoration: none;
             font-weight: bold;
             margin-right: 10px;
+            padding: 5px 10px;
+            border-radius: 4px;
         }
 
-        .action-links a:hover {
-            text-decoration: underline;
+        .link-delete {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .link-details {
+            background-color: #3e1c94;
+            color: white;
+        }
+
+        .link-edit {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .link-delete:hover,
+        .link-details:hover,
+        .link-edit:hover {
+            opacity: 0.9;
         }
 
         .completed-yes {
-            color: #28a745;
+            color: #0d69b5;
             font-weight: bold;
         }
 
         .completed-no {
-            color: #ffd21c;
+            color: #d19d02;
             font-weight: bold;
         }
     </style>
@@ -95,10 +137,12 @@
 <body>
 <div class="container">
     <h1>Task List</h1>
-    <div> <a href="/tasks/new" class="add-task-btn">Add New Task</a></div>
-    <a href="/tasks" class="add-task-btn" style="background-color: #007bff;">Show All</a>
-    <a href="/tasks/filter?completed=true" class="add-task-btn" style="background-color: #28a745;">Show Completed</a>
-    <a href="/tasks/filter?completed=false" class="add-task-btn" style="background-color: #ffc107;">Show Pending</a>
+    <div class="buttons">
+        <a href="/tasks/new" class="action-btn btn-new-task">Add New Task</a>
+        <a href="/tasks" class="action-btn btn-show-all">Show All</a>
+        <a href="/tasks/filter?completed=true" class="action-btn btn-show-completed">Show Completed</a>
+        <a href="/tasks/filter?completed=false" class="action-btn btn-show-pending">Show Pending</a>
+    </div>
     <table>
         <thead>
         <tr>
@@ -119,14 +163,13 @@
                       th:text="${task.completed ? 'Yes' : 'No'}"></span>
             </td>
             <td class="action-links">
-                <a th:href="@{'/tasks/delete/' + ${task.id}}">Delete</a>
-                <a th:href="@{'/tasks/' + ${task.id}}">Details</a>
-                <a th:href="@{'/tasks/edit/' + ${task.id}}">Edit</a>
+                <a th:href="@{'/tasks/delete/' + ${task.id}}" class="link-delete">Delete</a>
+                <a th:href="@{'/tasks/' + ${task.id}}" class="link-details">Details</a>
+                <a th:href="@{'/tasks/edit/' + ${task.id}}" class="link-edit">Edit</a>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
-
 </body>
 </html>

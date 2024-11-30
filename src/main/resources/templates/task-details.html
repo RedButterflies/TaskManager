@@ -40,6 +40,17 @@
             display: inline-block;
             margin-top: 20px;
             padding: 10px 15px;
+            background-color: #825d91;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .edit-link{
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
             background-color: #4CAF50;
             color: #fff;
             text-decoration: none;
@@ -67,7 +78,7 @@
     <div class="task-detail">
         <span>Completed:</span> <span th:text="${task.completed ? 'Yes' : 'No'}"></span>
     </div>
-    <a th:href="@{'/tasks/edit/' + ${task.id}}" class="back-link">Edit Task</a>
+    <a th:href="@{'/tasks/edit/' + ${task.id}}" class="edit-link">Edit Task</a>
     <a href="/tasks" class="back-link">Back to Task List</a>
 </div>
 </body>
