@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #3e1c94;
+            margin-bottom: 20px;
+        }
+
+        .task-detail {
+            margin-bottom: 15px;
+        }
+
+        .task-detail span {
+            font-weight: bold;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Task Details</h1>
+    <div class="task-detail">
+        <span>Title:</span> <span th:text="${task.title}"></span>
+    </div>
+    <div class="task-detail">
+        <span>Category:</span> <span th:text="${task.category}"></span>
+    </div>
+    <div class="task-detail">
+        <span>Due Date:</span> <span th:text="${task.dueDate}"></span>
+    </div>
+    <div class="task-detail">
+        <span>Completed:</span> <span th:text="${task.completed ? 'Yes' : 'No'}"></span>
+    </div>
+    <a th:href="@{'/tasks/edit/' + ${task.id}}" class="back-link">Edit Task</a>
+    <a href="/tasks" class="back-link">Back to Task List</a>
+</div>
+</body>
+</html>
