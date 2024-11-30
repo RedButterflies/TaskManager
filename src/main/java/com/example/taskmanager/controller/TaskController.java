@@ -65,5 +65,43 @@ public class TaskController {
         taskService.deleteTask(id);
         return "redirect:/tasks";
     }
+
+    // Pobiera szczegóły zadania na podstawie ID
+    @GetMapping("/{id}")
+    public String getTaskDetails(@PathVariable Long id, Model model) {
+        Task task = taskService.getTaskById(id);
+        model.addAttribute("task", task);
+        return "task-details";
+    }
+
+    // Aktualizuje istniejące zadanie
+    @PostMapping("/update/{id}")
+    public String updateTask(@PathVariable Long id, @Valid @ModelAttribute("task") Task task, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("task", task);
+            return "task-form";
+        }
+        taskService.updateTask(id, task);
+        return "redirect:/tasks";
+    }
+
+
+    // Filtruje zadania na podstawie statusu ukończenia
+    @GetMapping("/filter")
+    public String filterTasks(@RequestParam boolean completed, Model model) {
+        List<Task> tasks = taskService.getTasksByCompletionStatus(completed);
+        model.addAttribute("tasks", tasks);
+        return "task-list";
+    }
+
+    // Wyświetla formularz edycji zadania
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        Task task = taskService.getTaskById(id);
+        model.addAttribute("task", task);
+        return "task-form";
+    }
+
+
 }
 
