@@ -11,8 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -153,4 +156,138 @@ class FunctionalTests {
         //Weryfikuje, czy zadanie zostało usuniete z repozytorium
         assert taskRepository.findById(savedTask.getId()).isEmpty();
     }
+
+    //Test:Sprawdza,czy filtrowanie zadan dziala poprawnie, w tym filtrowanie ukonczonych, nieukonczonych, jak i zwracanie wszystkich zadan.
+    @Test
+    void filterTasks_ReturnsFilteredTasks() throws Exception {
+        //Tworzymy dwa zadania o różnym statusie ukończenia
+        Task completedTask = new Task();
+        completedTask.setTitle("Completed Task");
+        completedTask.setCategory("Work");
+        completedTask.setDueDate(LocalDate.now());
+        completedTask.setCompleted(true);
+
+        Task pendingTask = new Task();
+        pendingTask.setTitle("Pending Task");
+        pendingTask.setCategory("Home");
+        pendingTask.setDueDate(LocalDate.now());
+        pendingTask.setCompleted(false);
+
+        taskRepository.saveAll(List.of(completedTask, pendingTask)); // Zapisanie w bazie danych
+
+        // Filtrowanie ukończonych zadań
+        mockMvc.perform(get("/tasks/filter?completed=true"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("task-list"))
+                .andExpect(model().attributeExists("tasks"))
+                .andExpect(model().attribute("tasks", hasSize(1)))
+                .andExpect(model().attribute("tasks", hasItem(
+                        hasProperty("title", is("Completed Task"))
+                )));
+        // Filtrowanie nieukończonych zadań
+        mockMvc.perform(get("/tasks/filter?completed=false"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("task-list"))
+                .andExpect(model().attributeExists("tasks"))
+                .andExpect(model().attribute("tasks", hasSize(1)))
+                .andExpect(model().attribute("tasks", hasItem(
+                        hasProperty("title", is("Pending Task"))
+                )));
+
+        // Sprawdzenie: Zwracanie wszystkich zadań
+        mockMvc.perform(get("/tasks"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("task-list"))
+                .andExpect(model().attributeExists("tasks"))
+                .andExpect(model().attribute("tasks", hasSize(2)));
+    }
+
+    //Test: Sprawdza, czy szczegoly zadania są poprawnie wyswietlane.
+    @Test
+    void viewTaskDetails_ShowsTaskDetails() throws Exception {
+        //Tworzymy i zapisujemy zadanie
+        Task task = new Task();
+        task.setTitle("Sample Task");
+        task.setCategory("Work");
+        task.setDueDate(LocalDate.now().plusDays(1));
+        task.setCompleted(false);
+        task = taskRepository.save(task);
+
+        //Wyświetlenie szczegółów zadania
+        mockMvc.perform(get("/tasks/" + task.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("task-details"))
+                .andExpect(model().attributeExists("task"))
+                .andExpect(model().attribute("task", hasProperty("title", is("Sample Task"))))
+                .andExpect(model().attribute("task", hasProperty("category", is("Work"))))
+                .andExpect(model().attribute("task", hasProperty("completed", is(false))));
+    }
+
+    //Test: Sprawdza, czy edycja zadania działa poprawnie
+    @Test
+    void editTask_UpdatesTaskDetails() throws Exception {
+        //Tworzymy i zapisujemy "istniejace" zadanie
+        Task task = new Task();
+        task.setTitle("Old Title");
+        task.setCategory("Old Category");
+        task.setDueDate(LocalDate.of(2024, 1, 1));
+        task.setCompleted(false);
+        task = taskRepository.save(task);
+
+        //Wysyłamy ządanie GET do edycji zadania
+        mockMvc.perform(get("/tasks/edit/" + task.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("task-form"))
+                .andExpect(model().attributeExists("task"))
+                .andExpect(model().attribute("task", hasProperty("title", is("Old Title"))));
+
+        // Wysyłamy żądanie POST do aktualizacji zadania
+        mockMvc.perform(post("/tasks/update/" + task.getId())
+                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                        .param("title", "Updated Title")
+                        .param("category", "Updated Category")
+                        .param("dueDate", "2024-02-01")
+                        .param("completed", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/tasks"));
+
+        //Pobieramy zaktualizowane zadanie i weryfikujemy dane
+        Task updatedTask = taskRepository.findById(task.getId()).orElseThrow();
+        assertEquals("Updated Title", updatedTask.getTitle());
+        assertEquals("Updated Category", updatedTask.getCategory());
+        assertEquals(LocalDate.of(2024, 2, 1), updatedTask.getDueDate());
+        assertTrue(updatedTask.isCompleted());
+    }
+
+    //Test:Sprawdza, czy lista zadan poprawnie wyswietla zadania z linkami do akcji
+    @Test
+    void taskList_ShowsTasksWithActionLinks() throws Exception {
+        //Tworzymy i zapisujemy zadania
+        Task task1 = new Task();
+        task1.setTitle("Task 1");
+        task1.setCategory("Category 1");
+        task1.setDueDate(LocalDate.now());
+        task1.setCompleted(false);
+
+        Task task2 = new Task();
+        task2.setTitle("Task 2");
+        task2.setCategory("Category 2");
+        task2.setDueDate(LocalDate.now().plusDays(1));
+        task2.setCompleted(true);
+
+        taskRepository.saveAll(List.of(task1, task2)); //Zapisanie w bazie danych
+
+        // Sprawdzeni, czy lista zadań zawiera linki do akcji
+        mockMvc.perform(get("/tasks"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("task-list"))
+                .andExpect(model().attributeExists("tasks"))
+                .andExpect(content().string(containsString("/tasks/edit/" + task1.getId())))
+                .andExpect(content().string(containsString("/tasks/delete/" + task1.getId())))
+                .andExpect(content().string(containsString("/tasks/edit/" + task2.getId())))
+                .andExpect(content().string(containsString("/tasks/delete/" + task2.getId())));
+    }
+
+
+
 }
