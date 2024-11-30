@@ -95,7 +95,10 @@
 <body>
 <div class="container">
     <h1>Task List</h1>
-    <a href="/tasks/new" class="add-task-btn">Add New Task</a>
+    <div> <a href="/tasks/new" class="add-task-btn">Add New Task</a></div>
+    <a href="/tasks" class="add-task-btn" style="background-color: #007bff;">Show All</a>
+    <a href="/tasks/filter?completed=true" class="add-task-btn" style="background-color: #28a745;">Show Completed</a>
+    <a href="/tasks/filter?completed=false" class="add-task-btn" style="background-color: #ffc107;">Show Pending</a>
     <table>
         <thead>
         <tr>
@@ -117,10 +120,13 @@
             </td>
             <td class="action-links">
                 <a th:href="@{'/tasks/delete/' + ${task.id}}">Delete</a>
+                <a th:href="@{'/tasks/' + ${task.id}}">Details</a>
+                <a th:href="@{'/tasks/edit/' + ${task.id}}">Edit</a>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
+
 </body>
 </html>
