@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Task</title>
+    <title th:text="${task.id} != null ? 'Edit Task' : 'Create Task'">Task Form</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -80,8 +80,8 @@
 </head>
 <body>
 <div class="container">
-    <h1>Create Task</h1>
-    <form th:action="@{/tasks}" th:object="${task}" method="post">
+    <h1 th:text="${task.id} != null ? 'Edit Task' : 'Create Task'">Task Form</h1>
+    <form th:action="@{${task.id} != null ? '/tasks/update/' + ${task.id} : '/tasks'}" th:object="${task}" method="post">
         <div class="form-group">
             <label>Title:</label>
             <input type="text" th:field="*{title}" />
@@ -103,7 +103,7 @@
                 Mark as Completed
             </label>
         </div>
-        <button type="submit">Save Task</button>
+        <button type="submit" th:text="${task.id} != null ? 'Update Task' : 'Save Task'">Save Task</button>
     </form>
 </div>
 </body>
